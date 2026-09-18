@@ -20,6 +20,7 @@ public class Main {
         double[] squaredArray1 = squareArray(array1);
         double[] squaredArray2 = squareArray(array2);
 
+        //Действия с массивами по заданию
         System.out.print("Первый массив в квадрате: ");
         printArray(squaredArray1);
         System.out.println("Минимальный элемент: " + findMin(squaredArray1));
