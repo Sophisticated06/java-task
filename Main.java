@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // --- ЧАСТЬ 1 ---
+        //ЧАСТЬ 1: Обычные массивы
         System.out.println("ЧАСТЬ 1: Обычные массивы");
         
         System.out.println("Введите 6 элементов для первого массива:");
@@ -17,10 +17,10 @@ public class Main {
         System.out.println("Введите 5 элементов для второго массива:");
         double[] array2 = readArray(scanner, 5);
 
+        // Формирование новых массивов и вычисление минимального элемента через методы
         double[] squaredArray1 = squareArray(array1);
         double[] squaredArray2 = squareArray(array2);
 
-        //Действия с массивами по заданию
         System.out.print("Первый массив в квадрате: ");
         printArray(squaredArray1);
         System.out.println("Минимальный элемент: " + findMin(squaredArray1));
@@ -29,17 +29,18 @@ public class Main {
         printArray(squaredArray2);
         System.out.println("Минимальный элемент: " + findMin(squaredArray2));
 
-        // --- ЧАСТЬ 2 ---
+        // ЧАСТЬ 2: Динамические массивы
         System.out.println("\nЧАСТЬ 2: Динамические массивы");
 
         System.out.println("Введите 6 элементов для ArrayList:");
-        List<Double> list1 = readList(scanner, 6, new ArrayList<>());
+        List<Double> list1 = readArrayList(scanner, 6);
 
         System.out.println("Введите 5 элементов для LinkedList:");
-        List<Double> list2 = readList(scanner, 5, new LinkedList<>());
+        List<Double> list2 = readLinkedList(scanner, 5);
 
-        List<Double> squaredList1 = squareList(list1, new ArrayList<>());
-        List<Double> squaredList2 = squareList(list2, new LinkedList<>());
+        // Формирование новых списков через методы
+        List<Double> squaredList1 = squareList(list1);
+        List<Double> squaredList2 = squareList(list2);
 
         System.out.print("ArrayList в квадрате: ");
         printList(squaredList1);
@@ -51,6 +52,7 @@ public class Main {
     }
 
     // Методы для обычных массивов
+
     public static double[] readArray(Scanner scanner, int size) {
         double[] arr = new double[size];
         for (int i = 0; i < size; i++) {
@@ -85,7 +87,17 @@ public class Main {
     }
 
     // Методы для списков List
-    public static List<Double> readList(Scanner scanner, int size, List<Double> list) {
+
+    public static List<Double> readArrayList(Scanner scanner, int size) {
+        List<Double> list = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            list.add(scanner.nextDouble());
+        }
+        return list;
+    }
+
+    public static List<Double> readLinkedList(Scanner scanner, int size) {
+        List<Double> list = new LinkedList<>();
         for (int i = 0; i < size; i++) {
             list.add(scanner.nextDouble());
         }
@@ -99,7 +111,15 @@ public class Main {
         System.out.println();
     }
 
-    public static List<Double> squareList(List<Double> original, List<Double> result) {
+    //(ArrayList или LinkedList)
+    public static List<Double> squareList(List<Double> original) {
+        List<Double> result;
+        if (original instanceof LinkedList) {
+            result = new LinkedList<>();
+        } else {
+            result = new ArrayList<>();
+        }
+
         for (double num : original) {
             result.add(num * num);
         }
