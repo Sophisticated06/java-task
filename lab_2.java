@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
 class AirConditioner {
     private String brand;
     private int year;
@@ -37,5 +40,21 @@ class AirConditioner {
     // Расчет энергопотребления за указанное количество часов
     public double calculateEnergy(int hours) {
         return this.power * hours;
+    }
+}
+public class lab_2 {
+    public static void main(String[] args) {
+        ArrayList<AirConditioner> list = new ArrayList<>();
+
+        
+        AirConditioner ac1 = new AirConditioner(); // По умолчанию
+        AirConditioner ac2 = new AirConditioner("Samsung", 2023, 2.5); // С параметрами
+        AirConditioner ac3 = new AirConditioner("Daikin", 2026, 3.0); // С параметрами
+
+        list.add(ac1);
+        list.add(ac2);
+        list.add(ac3);
+
+        System.out.println("Программа запущена, массив объектов создан.");
     }
 }
