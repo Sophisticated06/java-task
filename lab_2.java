@@ -57,4 +57,22 @@ public class lab_2 {
 
         System.out.println("Программа запущена, массив объектов создан.");
     }
+
+    
+    public static void findNewest(ArrayList<AirConditioner> list) {
+        if (list.isEmpty()) {
+            System.out.println("Список пуст!");
+            return;
+        }
+
+        AirConditioner newest = list.get(0);
+        for (AirConditioner ac : list) {
+            if (ac.getYear() > newest.getYear()) {
+                newest = ac;
+            }
+        }
+
+        System.out.println("\n=== Самый новый кондиционер ===");
+        newest.displayInfo();
+    }
 }
