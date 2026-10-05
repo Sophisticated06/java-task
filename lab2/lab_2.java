@@ -1,5 +1,8 @@
+
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import lab_3.AirConditioner;
 
 public class lab_2 {
     public static void main(String[] args) {
@@ -91,7 +94,7 @@ public class lab_2 {
                     System.out.println("Ошибка! Число не может быть отрицательным.");
                 }
             } else {
-                System.out.println("Ошибка! Введены буквы или некорректный символ. Введите число (например: 2.5 или 2,5).");
+                System.out.println("Ошибка! Введены буквы или некорректный символ.");
                 scanner.next();
             }
         }

@@ -1,0 +1,50 @@
+
+char c = 675; 
+-2^(n-1) до 2^(n-1) - 1
+
+
+
+
+public static double sum(double a, double b) {
+    return a + b;
+}
+
+
+
+void printIndexes(double[] array) {
+    for (int i = 0; i < array.length; i++) {
+        System.out.println("Индекс: " + i);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void arr(double[] array){
+    for (int i=0, i<array.length, i++)
+    {
+        System.out.println("Индекс:",)
+    }
+}

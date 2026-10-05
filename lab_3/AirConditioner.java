@@ -1,3 +1,4 @@
+package lab_3;
 public class AirConditioner extends Thermostat {
     private int fanSpeed;
     private boolean ecoMode;
@@ -43,6 +44,8 @@ public class AirConditioner extends Thermostat {
         System.err.println("Запущен режим быстрый Turbo: температура снижена, вентилятор на максимуме");
     }
 
-    public int getFanSpeed(){return fanSpeed;}
-    public boolean isEcoMode(){return ecoMode;}
+    public int getFanSpeed() { return fanSpeed; }
+    public boolean isEcoMode() { return ecoMode; }
+    public String getFilterStatus() { return filterStatus; }
+    public double getPowerConsumption() { return powerConsumption; }
 }

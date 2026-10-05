@@ -1,3 +1,4 @@
+package lab_3;
 import java.util.Random;
 
 public abstract class Thermostat {
@@ -12,6 +13,7 @@ public abstract class Thermostat {
     public Thermostat(String location, String unit, double targetTemperature, double maxLimitTemperature){
         this.id = idCounter++;
         this.unit = unit;
+        this.location = location;
         this.targetTemperature = targetTemperature;
         this.maxLimitTemperature = maxLimitTemperature;
         this.currentTemperature = 20.0;
