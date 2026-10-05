@@ -67,4 +67,24 @@ public class Main {
         devices.add(ac);
         System.out.println("Кондиционер успешно добавлен! ID прибора: " + ac.getId());
     }
+
+    private static void addOven(Scanner scanner, List<Thermostat> devices) {
+        System.out.println("\n--- Добавление Печи ---");
+        System.out.print("Введите расположение печи (например, Кухня): ");
+        String location = scanner.nextLine();
+
+        System.out.print("Введите единицы измерения (C или F): ");
+        String unit = scanner.nextLine();
+
+        System.out.print("Введите целевую температуру нагрева: ");
+        double targetTemp = scanner.nextDouble();
+
+        System.out.print("Введите предельно допустимую температуру: ");
+        double maxTemp = scanner.nextDouble();
+        scanner.nextLine();
+
+        Oven oven = new Oven(location, unit, targetTemp, maxTemp);
+        devices.add(oven);
+        System.out.println("Печь успешно добавлена! ID прибора: " + oven.getId());
+    }
 }
