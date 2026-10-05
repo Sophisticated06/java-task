@@ -47,4 +47,24 @@ public class Main {
 
         }
     }
+
+    private static void addAirConditioner(Scanner scanner, List<Thermostat> devices) {
+        System.out.println("\n--- Добавление Кондиционера ---");
+        System.out.print("Введите комнатное расположение (например, Гостиная): ");
+        String location = scanner.nextLine();
+
+        System.out.print("Введите единицы измерения (C или F): ");
+        String unit = scanner.nextLine();
+
+        System.out.print("Введите целевую температуру: ");
+        double targetTemp = scanner.nextDouble();
+
+        System.out.print("Введите предельно допустимую температуру: ");
+        double maxTemp = scanner.nextDouble();
+        scanner.nextLine();
+
+        AirConditioner ac = new AirConditioner(location, unit, targetTemp, maxTemp);
+        devices.add(ac);
+        System.out.println("Кондиционер успешно добавлен! ID прибора: " + ac.getId());
+    }
 }
