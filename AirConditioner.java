@@ -1,44 +1,48 @@
-public class AirConditioner {
-    private String brand;
-    private int year;
-    private double power;
+public class AirConditioner extends Thermostat {
+    private int fanSpeed;
+    private boolean ecoMode;
+    private String filterStatus;
+    private double powerConsumption;
 
-    // Конструктор по умолчанию
-    public AirConditioner() {
-        this.brand = "Неизвестно";
-        this.year = 2020;
-        this.power = 1.5;
+
+    public AirConditioner(String location, String unit, double targetTemperature, double maxLimitTemperature){
+        super(location, unit, targetTemperature, maxLimitTemperature);
+        this.fanSpeed = 1;
+        this.ecoMode = false;
+        this.filterStatus = "Чистый";
+        this.powerConsumption = 1.5;
+    }
+    
+    // Метод: Переключение эко-режима
+    public void taggleEcoMode(){
+        this.ecoMode = !this.ecoMode;
+        System.out.println("Эко-режим кондиционера: " + (ecoMode ? "Включен" : "Выключен"));
+    }
+    
+    // Метод: Установка скорости вентилятора
+    public void setFanSpeed(int speed){
+        if (speed >= 1 && speed <= 5){
+            this.fanSpeed = speed;
+            System.out.println("Скорость вентилятора установлена на: " + speed);
+        }
+        else{
+            System.out.println("Ошибка: скорость должна быть от 1 до 5");
+        }
     }
 
-    // Конструктор с параметрами
-    public AirConditioner(String brand, int year, double power) {
-        this.brand = brand;
-        this.year = year;
-        this.power = power;
+    // Метод: Очистка фильта
+    public void cleanFilter(){
+        this.filterStatus = "Чистый";
+        System.err.println("Воздушный фильтр успешно очищен");
     }
 
-    // Геттеры и сеттеры
-    public String getBrand() { return brand; }
-    public void setBrand(String brand) { this.brand = brand; }
-
-    public int getYear() { return year; }
-    public void setYear(int year) { this.year = year; }
-
-    public double getPower() { return power; }
-    public void setPower(double power) { this.power = power; }
-
-    // Вывод информации
-    public void displayInfo() {
-        System.out.println("Марка: " + brand + " | Год: " + year + " | Мощность: " + power + " кВт");
+    // Метод: Режим турбо-охлаждения
+    public void coolFast(){
+        this.targetTemperature -= 3.0;
+        this.fanSpeed = 5;
+        System.err.println("Запущен режим быстрый Turbo: температура снижена, вентилятор на максимуме");
     }
 
-    // Метод 1
-    public boolean isOld(int currentYear) {
-        return (currentYear - this.year) > 5;
-    }
-
-    // Метод 2
-    public double calculateEnergy(int hours) {
-        return this.power * hours;
-    }
+    public int getFanSpeed(){return fanSpeed;}
+    public boolean isEcoMode(){return ecoMode;}
 }
