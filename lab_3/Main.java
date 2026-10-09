@@ -130,4 +130,67 @@ public class Main {
 
         System.out.println("\n--- Управление прибором ID: " + selectedDevice.getId() + " ---");
         System.out.println("1. Изменить целевую температуру");
+
+        if (selectedDevice instanceof AirConditioner) {
+            AirConditioner ac = (AirConditioner) selectedDevice;
+            System.out.println("2. Переключить Эко-режим");
+            System.out.println("3. Изменить скорость вентилятора (1-5)");
+            System.out.print("Выберите действие: ");
+            int subChoice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (subChoice) {
+                case 1:
+                    System.out.print("Введите новую температуру: ");
+                    double temp = scanner.nextDouble();
+                    scanner.nextLine();
+                    ac.setTemperature(temp);
+                    break;
+                case 2:
+                    ac.taggleEcoMode();
+                    break;
+                case 3:
+                    System.out.print("Введите скорость (1-5): ");
+                    int speed = scanner.nextInt();
+                    scanner.nextLine();
+                    ac.setFanSpeed(speed);
+                    break;
+                default:
+                    System.out.println("Неверная команда!");
+            }
+        } else if (selectedDevice instanceof Oven) {
+            Oven oven = (Oven) selectedDevice;
+            System.out.println("2. Установить таймер (минуты)");
+            System.out.println("3. Заблокировать дверцу");
+            System.out.println("4. Разблокировать дверцу");
+            System.out.print("Выберите действие: ");
+            int subChoice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (subChoice) {
+                case 1:
+                    System.out.print("Введите новую температуру: ");
+                    double temp = scanner.nextDouble();
+                    scanner.nextLine();
+                    oven.setTemperature(temp);
+                    break;
+                case 2:
+                    System.out.print("Введите время в минутах: ");
+                    int mins = scanner.nextInt();
+                    scanner.nextLine();
+                    oven.setTimer(mins);
+                    break;
+                case 3:
+                    oven.lockDoor();
+                    break;
+                case 4:
+                    oven.unlockDoor();
+                    break;
+                default:
+                    System.out.println("Неверная команда!");
+            }
+        }
+    }   
 }
+
+    

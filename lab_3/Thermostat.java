@@ -44,6 +44,7 @@ public abstract class Thermostat {
     public void setLocation(String location){this.location = location;}
     public double getCurrentTemperature() { return currentTemperature; }
     public double getTargetTemperature() { return targetTemperature; }
+    public String getUnit() { return unit; }
 
     @Override
     public String toString() {
