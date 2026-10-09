@@ -48,4 +48,9 @@ public class AirConditioner extends Thermostat {
     public boolean isEcoMode() { return ecoMode; }
     public String getFilterStatus() { return filterStatus; }
     public double getPowerConsumption() { return powerConsumption; }
+
+    @Override
+    protected boolean isValidTemperature(double temp) {
+        return temp >= 16.0 && temp <= 30.0;
+    }
 }

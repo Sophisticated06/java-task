@@ -17,11 +17,29 @@ public abstract class Thermostat {
         this.targetTemperature = targetTemperature;
         this.maxLimitTemperature = maxLimitTemperature;
         this.currentTemperature = 20.0;
+
+        setTemperature(targetTemperature);
+
+        if (maxLimitTemperature < this.targetTemperature) {
+            System.out.println("Предельная температура не может быть меньше целевой! Установлен предел: " + (this.targetTemperature + 20.0) + " " + unit);
+            this.maxLimitTemperature = this.targetTemperature + 20.0;
+        } else {
+            this.maxLimitTemperature = maxLimitTemperature;
+        }
     }
 
     public void setTemperature(double temperature){
-        this.targetTemperature = temperature;
-        System.out.println("Целевая температура установлена: " + temperature + " " + unit);
+        if (!isValidTemperature(temperature)) {
+            System.out.println("Недопустимая температура (" + temperature + " " + unit + ")! Установлено значение по умолчанию: 20.0 " + unit);
+            this.targetTemperature = 20.0;
+        } else {
+            this.targetTemperature = temperature;
+            System.out.println("Целевая температура установлена: " + this.targetTemperature + " " + unit);
+        }
+    }
+
+    protected boolean isValidTemperature(double temp) {
+        return temp >= -50.0 && temp <= 300.0;
     }
 
     public boolean isExceedingLimit(){

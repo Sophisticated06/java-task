@@ -48,4 +48,9 @@ public class Oven extends Thermostat {
     public boolean isDoorLocked() { return doorLocked; }
     public boolean isPreheated() { return isPreheated; }
 
+    @Override
+    protected boolean isValidTemperature(double temp) {
+        return temp >= 30.0 && temp <= 300.0;
+    }
+
 }

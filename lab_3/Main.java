@@ -1,8 +1,8 @@
 package lab_3;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class Main {
@@ -49,19 +49,12 @@ public class Main {
     }
 
     private static void addAirConditioner(Scanner scanner, List<Thermostat> devices) {
-        System.out.println("\n--- Добавление Кондиционера ---");
-        System.out.print("Введите комнатное расположение (например, Гостиная): ");
-        String location = scanner.nextLine();
+        System.out.println("\n    Добавление Кондиционера     ");
+        String location = readValidText(scanner, "Введите комнатное расположение (например, Гостиная): ");
+        String unit = readValidUnit(scanner);
 
-        System.out.print("Введите единицы измерения (C или F): ");
-        String unit = scanner.nextLine();
-
-        System.out.print("Введите целевую температуру: ");
-        double targetTemp = scanner.nextDouble();
-
-        System.out.print("Введите предельно допустимую температуру: ");
-        double maxTemp = scanner.nextDouble();
-        scanner.nextLine();
+        double targetTemp = readValidDouble(scanner, "Введите целевую температуру (-20...30): ", -20.0, 30.0);
+        double maxTemp = readValidDouble(scanner, "Введите предельно допустимую температуру (целевая...45): ", targetTemp, 45.0);
 
         AirConditioner ac = new AirConditioner(location, unit, targetTemp, maxTemp);
         devices.add(ac);
@@ -69,19 +62,12 @@ public class Main {
     }
 
     private static void addOven(Scanner scanner, List<Thermostat> devices) {
-        System.out.println("\n--- Добавление Печи ---");
-        System.out.print("Введите расположение печи (например, Кухня): ");
-        String location = scanner.nextLine();
+        System.out.println("\n    Добавление Печи     ");
+        String location = readValidText(scanner, "Введите расположение печи (например, Кухня): ");
+        String unit = readValidUnit(scanner);
 
-        System.out.print("Введите единицы измерения (C или F): ");
-        String unit = scanner.nextLine();
-
-        System.out.print("Введите целевую температуру нагрева: ");
-        double targetTemp = scanner.nextDouble();
-
-        System.out.print("Введите предельно допустимую температуру: ");
-        double maxTemp = scanner.nextDouble();
-        scanner.nextLine();
+        double targetTemp = readValidDouble(scanner, "Введите целевую температуру нагрева (30...300): ", 30.0, 300.0);
+        double maxTemp = readValidDouble(scanner, "Введите предельно допустимую температуру (целевая...350): ", targetTemp, 350.0);
 
         Oven oven = new Oven(location, unit, targetTemp, maxTemp);
         devices.add(oven);
@@ -89,33 +75,30 @@ public class Main {
     }
 
     private static void showAllDevices(List<Thermostat> devices) {
-        System.out.println("\n--- Список всех зарегистрированных приборов ---");
         if (devices.isEmpty()) {
-            System.out.println("Список пуст. Сначала добавьте хотя бы одно устройство");
+            System.out.println("Список приборов пуст.");
             return;
         }
-
+        System.out.println("\n--- Список всех зарегистрированных приборов ---");
         for (Thermostat device : devices) {
             String typeName = (device instanceof AirConditioner) ? "Кондиционер" : "Печь";
-            System.out.println("ID: " + device.getId() + 
-                               " | Тип: " + typeName + 
-                               " | Локация: " + device.getLocation() + 
-                               " | Целевая темп.: " + device.getTargetTemperature() + device.getUnit() +
-                               " | Текущая темп.: " + device.getCurrentTemperature() + device.getUnit());
+            System.out.println("ID: " + device.getId() +
+                    " | Тип: " + typeName +
+                    " | Локация: " + device.getLocation() +
+                    " | Целевая темп.: " + device.getTargetTemperature() + device.getUnit() +
+                    " | Текущая темп.: " + device.getCurrentTemperature() + device.getUnit());
         }
     }
 
     private static void manageDevice(Scanner scanner, List<Thermostat> devices) {
         if (devices.isEmpty()) {
-            System.out.println("Список пуст! Нечем управлять.");
+            System.out.println("Список приборов пуст. Нечем управлять.");
             return;
         }
 
-        System.out.print("Введите ID прибора для управления: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-
+        int id = readValidInt(scanner, "Введите ID прибора для управления: ", 1, Integer.MAX_VALUE);
         Thermostat selectedDevice = null;
+
         for (Thermostat d : devices) {
             if (d.getId() == id) {
                 selectedDevice = d;
@@ -128,69 +111,101 @@ public class Main {
             return;
         }
 
-        System.out.println("\n--- Управление прибором ID: " + selectedDevice.getId() + " ---");
+        System.out.println("\nУправление прибором ID " + selectedDevice.getId() + ":");
         System.out.println("1. Изменить целевую температуру");
 
         if (selectedDevice instanceof AirConditioner) {
             AirConditioner ac = (AirConditioner) selectedDevice;
             System.out.println("2. Переключить Эко-режим");
             System.out.println("3. Изменить скорость вентилятора (1-5)");
-            System.out.print("Выберите действие: ");
-            int subChoice = scanner.nextInt();
-            scanner.nextLine();
 
+            int subChoice = readValidInt(scanner, "Выберите действие: ", 1, 3);
             switch (subChoice) {
                 case 1:
-                    System.out.print("Введите новую температуру: ");
-                    double temp = scanner.nextDouble();
-                    scanner.nextLine();
+                    double temp = readValidDouble(scanner, "Введите новую температуру (-20...30): ", -20.0, 30.0);
                     ac.setTemperature(temp);
                     break;
                 case 2:
                     ac.taggleEcoMode();
                     break;
                 case 3:
-                    System.out.print("Введите скорость (1-5): ");
-                    int speed = scanner.nextInt();
-                    scanner.nextLine();
+                    int speed = readValidInt(scanner, "Введите скорость (1-5): ", 1, 5);
                     ac.setFanSpeed(speed);
                     break;
-                default:
-                    System.out.println("Неверная команда!");
             }
         } else if (selectedDevice instanceof Oven) {
             Oven oven = (Oven) selectedDevice;
             System.out.println("2. Установить таймер (минуты)");
-            System.out.println("3. Заблокировать дверцу");
-            System.out.println("4. Разблокировать дверцу");
-            System.out.print("Выберите действие: ");
-            int subChoice = scanner.nextInt();
-            scanner.nextLine();
 
+            int subChoice = readValidInt(scanner, "Выберите действие: ", 1, 2);
             switch (subChoice) {
                 case 1:
-                    System.out.print("Введите новую температуру: ");
-                    double temp = scanner.nextDouble();
-                    scanner.nextLine();
+                    double temp = readValidDouble(scanner, "Введите новую температуру (30...300): ", 30.0, 300.0);
                     oven.setTemperature(temp);
                     break;
                 case 2:
-                    System.out.print("Введите время в минутах: ");
-                    int mins = scanner.nextInt();
-                    scanner.nextLine();
+                    int mins = readValidInt(scanner, "Введите время таймера в минутах (1-1440): ", 1, 1440);
                     oven.setTimer(mins);
                     break;
-                case 3:
-                    oven.lockDoor();
-                    break;
-                case 4:
-                    oven.unlockDoor();
-                    break;
-                default:
-                    System.out.println("Неверная команда!");
             }
         }
-    }   
+    }
+
+    private static int readValidInt(Scanner scanner, String prompt, int min, int max) {
+        while (true) {
+            System.out.print(prompt);
+            if (scanner.hasNextInt()) {
+                int value = scanner.nextInt();
+                scanner.nextLine();
+                if (value >= min && value <= max) {
+                    return value;
+                }
+                System.out.println("Ошибка! Введите число от " + min + " до " + max + ".");
+            } else {
+                System.out.println("Ошибка! Ввод должен содержать только цифры (буквы недопустимы).");
+                scanner.nextLine();
+            }
+        }
+    }
+
+    private static double readValidDouble(Scanner scanner, String prompt, double min, double max) {
+        while (true) {
+            System.out.print(prompt);
+            if (scanner.hasNextDouble()) {
+                double value = scanner.nextDouble();
+                scanner.nextLine();
+                if (value >= min && value <= max) {
+                    return value;
+                }
+                System.out.println("Ошибка! Введите число от " + min + " до " + max + ".");
+            } else {
+                System.out.println("Ошибка! Ввод должен содержать только цифры (буквы недопустимы).");
+                scanner.nextLine();
+            }
+        }
+    }
+
+    private static String readValidText(Scanner scanner, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+            if (!input.isEmpty() && input.matches("[a-zA-Zа-яА-ЯёЁ\\s]+")) {
+                return input;
+            }
+            System.out.println("Ошибка! Ввод должен содержать только буквы (без цифр и спецсимволов).");
+        }
+    }
+
+    private static String readValidUnit(Scanner scanner) {
+        while (true) {
+            System.out.print("Введите единицы измерения (C или F): ");
+            String input = scanner.nextLine().trim().toUpperCase();
+            if (input.equals("C") || input.equals("F")) {
+                return input;
+            }
+            System.out.println("Ошибка! Разрешено вводить только 'C' или 'F'.");
+        }
+    }
 }
 
     
