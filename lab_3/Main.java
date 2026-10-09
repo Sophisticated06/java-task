@@ -87,4 +87,21 @@ public class Main {
         devices.add(oven);
         System.out.println("Печь успешно добавлена! ID прибора: " + oven.getId());
     }
+
+    private static void showAllDevices(List<Thermostat> devices) {
+        System.out.println("\n--- Список всех зарегистрированных приборов ---");
+        if (devices.isEmpty()) {
+            System.out.println("Список пуст. Сначала добавьте хотя бы одно устройство");
+            return;
+        }
+
+        for (Thermostat device : devices) {
+            String typeName = (device instanceof AirConditioner) ? "Кондиционер" : "Печь";
+            System.out.println("ID: " + device.getId() + 
+                               " | Тип: " + typeName + 
+                               " | Локация: " + device.getLocation() + 
+                               " | Целевая темп.: " + device.getTargetTemperature() + device.getUnit() +
+                               " | Текущая темп.: " + device.getCurrentTemperature() + device.getUnit());
+        }
+    }
 }
