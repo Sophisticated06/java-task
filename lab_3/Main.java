@@ -104,4 +104,30 @@ public class Main {
                                " | Текущая темп.: " + device.getCurrentTemperature() + device.getUnit());
         }
     }
+
+    private static void manageDevice(Scanner scanner, List<Thermostat> devices) {
+        if (devices.isEmpty()) {
+            System.out.println("Список пуст! Нечем управлять.");
+            return;
+        }
+
+        System.out.print("Введите ID прибора для управления: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        Thermostat selectedDevice = null;
+        for (Thermostat d : devices) {
+            if (d.getId() == id) {
+                selectedDevice = d;
+                break;
+            }
+        }
+
+        if (selectedDevice == null) {
+            System.out.println("Прибор с таким ID не найден!");
+            return;
+        }
+
+        System.out.println("\n--- Управление прибором ID: " + selectedDevice.getId() + " ---");
+        System.out.println("1. Изменить целевую температуру");
 }
