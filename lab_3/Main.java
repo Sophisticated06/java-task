@@ -77,6 +77,19 @@ public class Main {
         System.out.println("Печь успешно добавлена! ID прибора: " + oven.getId());
     }
 
+    private static void addWirelessThermostat(Scanner scanner, List<Thermostat> devices) {
+    System.out.println("\n--- Добавление Термостата батареи ---");
+    String location = readValidText(scanner, "Введите комнату (например, Спальня): ");
+    String unit = readValidUnit(scanner);
+
+    double targetTemp = readValidDouble(scanner, "Введите целевую температуру (5...28): ", 5.0, 28.0);
+    double maxTemp = readValidDouble(scanner, "Введите предельно допустимую температуру (целевая...35): ", targetTemp, 35.0);
+
+    WirelessRadiatorThermostat wrt = new WirelessRadiatorThermostat(location, unit, targetTemp, maxTemp);
+    devices.add(wrt); // Upcasting в общий список приборов!
+    System.out.println("Термостат батареи успешно добавлен! ID прибора: " + wrt.getId());
+}
+
     private static void showAllDevices(List<Thermostat> devices) {
         if (devices.isEmpty()) {
             System.out.println("Список приборов пуст.");
