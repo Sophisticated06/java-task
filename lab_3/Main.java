@@ -16,8 +16,9 @@ public class Main {
             System.out.println("\n|        Управление умными приборами        |");
             System.out.println("1. Добавить Кондиционер");
             System.out.println("2. Добавить Печь");
-            System.out.println("3. Показать список всех приборов");
-            System.out.println("4. Управлять конкретным прибором");
+            System.out.println("3. Добавить Беспроводной термостат батареи");
+            System.out.println("4. Показать список всех приборов");
+            System.out.println("5. Управлять конкретным прибором");
             System.out.println("0. Выйти из программы");
             System.out.println("Выберите действие: ");
 
@@ -32,9 +33,12 @@ public class Main {
                     addOven(scanner, devices);
                     break;
                 case 3:
-                    showAllDevices(devices);
+                    addWirelessThermostat(scanner, devices);
                     break;
                 case 4:
+                    showAllDevices(devices);
+                    break;
+                case 5:
                     manageDevice(scanner, devices);
                     break;
                 case 0:
@@ -44,7 +48,6 @@ public class Main {
                 default:
                     System.out.println("Неверный пункт меню! Попробуйте снова.");
             }
-
         }
     }
 
