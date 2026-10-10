@@ -127,11 +127,10 @@ public class Main {
             return;
         }
 
-        System.out.println("\nУправление прибором ID " + selectedDevice.getId() + ":");
+        System.out.println("\nУправление прибором ID " + selectedDevice.getId() + " (" + selectedDevice.getClass().getSimpleName() + "):");
         System.out.println("1. Изменить целевую температуру");
 
-        if (selectedDevice instanceof AirConditioner) {
-            AirConditioner ac = (AirConditioner) selectedDevice;
+        if (selectedDevice instanceof AirConditioner ac) {
             System.out.println("2. Переключить Эко-режим");
             System.out.println("3. Изменить скорость вентилятора (1-5)");
 
@@ -145,12 +144,11 @@ public class Main {
                     ac.taggleEcoMode();
                     break;
                 case 3:
-                    int speed = readValidInt(scanner, "Введите скорость (1-5): ", 1, 5);
+                    int speed = readValidInt(scanner, "Введите скорость вентилятора (1-5): ", 1, 5);
                     ac.setFanSpeed(speed);
                     break;
             }
-        } else if (selectedDevice instanceof Oven) {
-            Oven oven = (Oven) selectedDevice;
+        } else if (selectedDevice instanceof Oven oven) {
             System.out.println("2. Установить таймер (минуты)");
 
             int subChoice = readValidInt(scanner, "Выберите действие: ", 1, 2);
@@ -162,6 +160,35 @@ public class Main {
                 case 2:
                     int mins = readValidInt(scanner, "Введите время таймера в минутах (1-1440): ", 1, 1440);
                     oven.setTimer(mins);
+                    break;
+            }
+        } else if (selectedDevice instanceof WirelessRadiatorThermostat wrt) {
+            System.out.println("2. Проверить заряд батареи");
+            System.out.println("3. Изменить статус датчика окна (Открыто/Закрыто)");
+            System.out.println("4. Симулировать разряд батареи");
+
+            int subChoice = readValidInt(scanner, "Выберите действие: ", 1, 4);
+            switch (subChoice) {
+                case 1:
+                    double temp = readValidDouble(scanner, "Введите новую температуру (5...28): ", 5.0, 28.0);
+                    wrt.setTemperature(temp);
+                    break;
+                case 2:
+                    wrt.checkBattery();
+                    break;
+                case 3:
+                    System.out.print("Окно открыто? (true / false): ");
+                    while (!scanner.hasNextBoolean()) {
+                        System.out.println("Ошибка! Введите true или false.");
+                        scanner.next();
+                    }
+                    boolean isOpen = scanner.nextBoolean();
+                    scanner.nextLine(); // очистка буфера
+                    wrt.setWindowOpen(isOpen);
+                    break;
+                case 4:
+                    int percent = readValidInt(scanner, "Введите процент разряда (1-100): ", 1, 100);
+                    wrt.drainBattery(percent);
                     break;
             }
         }
