@@ -5,7 +5,6 @@ public class AirConditioner extends Thermostat {
     private String filterStatus;
     private double powerConsumption;
 
-
     public AirConditioner(String location, String unit, double targetTemperature, double maxLimitTemperature){
         super(location, unit, targetTemperature, maxLimitTemperature);
         this.fanSpeed = 1;
