@@ -31,7 +31,7 @@ public class FileDeviceReader {
         List<Thermostat> loadedDevices = new ArrayList<>();
         File file = new File(fileName);
 
-        // Проверяем, существует ли файл
+        // Проверка на существование файла
         if (!file.exists()) {
             System.out.println("Ошибка: Файл \"" + fileName + "\" не найден на диске!");
             return loadedDevices;
