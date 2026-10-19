@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public class FileDeviceReader {
     private String fileName; // Имя файла для чтения
@@ -36,7 +37,27 @@ public class FileDeviceReader {
             System.out.println("Ошибка: Файл \"" + fileName + "\" не найден на диске!");
             return loadedDevices;
         }
+        
+        int totalObjectsFound = 0;
+        int totalPropertiesRead = 0;
+        int totalPropertiesMissing = 0;
 
+        try (BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))){
+            String line;
+            String currentType = null;
+            Map<String, String> currentProperties = new HashMap<>();
+
+            while ((line = reader.readLine()) != null){
+                line = line.trim();
+
+                if (line.isEmpty() || line.startsWith("#")){
+                    continue;
+                }
+            }
+        }
+         catch (IOException e){
+            System.out.println("Ошибка при чтении файла: " + e.getMessage());
+         }
         
 
     }
