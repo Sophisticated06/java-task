@@ -53,6 +53,20 @@ public class FileDeviceReader {
                 if (line.isEmpty() || line.startsWith("#")){
                     continue;
                 }
+
+                if (line.startsWith("[") && line.endsWith("]")){
+                    if (currentType != null) {
+                        Thermostat device = createDeviceFromProperties(currentType, currentProperties, totalPropertiesRead);
+                        if (device != null) {
+                            loadedDevices.add(device);
+                            totalObjectsFound++;
+                        }
+                    }
+
+                    currentType = line.substring(1, line.length() - 1).trim();
+                    currentProperties.clear(); // Очищаем карту для нового прибора
+                    continue;
+                }
             }
         }
          catch (IOException e){
