@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 public class FileDeviceReader {
     private String fileName; // Имя файла для чтения
@@ -54,9 +53,10 @@ public class FileDeviceReader {
                     continue;
                 }
 
+                // Распознавание заголовков типа [AirConditioner]
                 if (line.startsWith("[") && line.endsWith("]")){
                     if (currentType != null) {
-                        Thermostat device = createDeviceFromProperties(currentType, currentProperties, totalPropertiesRead);
+                        Thermostat device = createDeviceFromProperties(currentType, currentProperties);
                         if (device != null) {
                             loadedDevices.add(device);
                             totalObjectsFound++;
@@ -67,12 +67,74 @@ public class FileDeviceReader {
                     currentProperties.clear(); // Очищаем карту для нового прибора
                     continue;
                 }
-            }
-        }
-         catch (IOException e){
-            System.out.println("Ошибка при чтении файла: " + e.getMessage());
-         }
-        
 
+                // Парсинг параметров вида key = value
+                if (line.contains("=")) {
+                    String[] parts = line.split("=", 2);
+                    String key = parts[0].trim();
+                    String value = parts[1].trim();
+                    currentProperties.put(key, value);
+                    totalPropertiesRead++;
+                }
+            }
+
+            // Создание самого последнего устройства в файле после окончания цикла
+            if (currentType != null) {
+                Thermostat device = createDeviceFromProperties(currentType, currentProperties);
+                if (device != null) {
+                    loadedDevices.add(device);
+                    totalObjectsFound++;
+                }
+            }
+
+            System.out.println("Успешно загружено приборов: " + totalObjectsFound + ", прочитано свойств: " + totalPropertiesRead);
+
+        } catch (IOException e){
+            System.out.println("Ошибка при чтении файла: " + e.getMessage());
+        }
+
+        return loadedDevices; 
     }
+
+    private Thermostat createDeviceFromProperties(String type, Map<String, String> properties) {
+    String location = properties.get("location");
+    String unit = properties.get("unit");
+    
+    // Проверяем наличие обязательных полей
+    if (location == null || unit == null) {
+        System.out.println("Ошибка: у прибора типа [" + type + "] отсутствуют обязательные поля (location или unit).");
+        return null;
+    }
+
+    double targetTemp = properties.containsKey("targetTemperature") 
+            ? Double.parseDouble(properties.get("targetTemperature")) : 20.0;
+    double maxTemp = properties.containsKey("maxLimitTemperature") 
+            ? Double.parseDouble(properties.get("maxLimitTemperature")) : (targetTemp + 20.0);
+
+    Thermostat device = null;
+
+    switch (type) {
+        case "AirConditioner":
+            device = new AirConditioner(location, unit, targetTemp, maxTemp);
+            break;
+
+        case "Oven":
+            device = new Oven(location, unit, targetTemp, maxTemp);
+            break;
+
+        case "WirelessRadiatorThermostat":
+            device = new WirelessRadiatorThermostat(location, unit, targetTemp, maxTemp);
+            break;
+
+        default:
+            System.out.println("Предупреждение: неизвестный тип прибора в файле — " + type);
+            break;
+    }
+
+    return device;
 }
+
+}
+
+
+
