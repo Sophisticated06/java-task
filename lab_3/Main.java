@@ -1,11 +1,15 @@
 package lab_3;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 
 public class Main {
+
+    private static String currentFileName = "devices.txt"; // имя файла по умолчанию
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         List<Thermostat> devices = new ArrayList<>();
@@ -19,6 +23,8 @@ public class Main {
             System.out.println("3. Добавить Беспроводной термостат батареи");
             System.out.println("4. Показать список всех приборов");
             System.out.println("5. Управлять конкретным прибором");
+            System.out.println("6. Загрузить приборы из файла");
+            System.out.println("7. Изменить имя файла для чтения (текущий: " + currentFileName + ")");
             System.out.println("0. Выйти из программы");
             System.out.println("Выберите действие: ");
 
@@ -41,6 +47,60 @@ public class Main {
                 case 5:
                     manageDevice(scanner, devices);
                     break;
+                case 6:
+                    // Пункт 6: Загрузка из файла
+                    System.out.println("\n--- Загрузка приборов из файла ---");
+                    System.out.print("Введите имя файла [текущий: " + currentFileName + "]: ");
+                    String inputFileName = scanner.nextLine().trim();
+                    
+                    // Если пользователь ничего не ввел (просто нажал Enter), оставляем currentFileName
+                    if (!inputFileName.isEmpty()) {
+                        currentFileName = inputFileName;
+                    }
+
+                    // Читаем через наш ридер
+                    FileDeviceReader reader = new FileDeviceReader(currentFileName);
+                    List<Thermostat> loaded = reader.readDevicesFromFile();
+
+                    if (!loaded.isEmpty()) {
+                        devices.addAll(loaded);
+                        System.out.println("Успешно добавлено в общую систему устройств: " + loaded.size() + " шт.");
+                    } else {
+                        System.out.println("Файл пуст или не содержит корректных данных.");
+                    }
+                    break;
+
+                case 7:
+                    System.out.println("\n--- Переименование файла на диске ---");
+                    System.out.print("Введите текущее имя файла (например, devices.txt): ");
+                    String oldName = scanner.nextLine().trim();
+    
+                    System.out.print("Введите новое имя файла (например, nnn.txt): ");
+                    String targetName = scanner.nextLine().trim();
+
+                    // Создаем объект File для старого и нового файла
+                    File oldFile = new File(oldName);
+                    File newFile = new File(targetName);
+
+                    // Проверяем, существует ли исходный файл
+                    if (!oldFile.exists()) {
+                    System.out.println("Ошибка: Файл \"" + oldName + "\" не найден на диске!");
+                    break;
+                    }
+
+    // Пробуем переименовать файл физически в папке
+    boolean success = oldFile.renameTo(newFile);
+
+    if (success) {
+        System.out.println("Успешно! Файл \"" + oldName + "\" переименован в \"" + targetName + "\" прямо в папке.");
+        // Если это был текущий файл для чтения, обновляем переменную
+        if (oldName.equals(currentFileName)) {
+            currentFileName = targetName;
+        }
+    } else {
+        System.out.println("Ошибка при переименовании файла.");
+    }
+    break;
                 case 0:
                     running = false;
                     System.out.println("Завершение работы программы.");
@@ -97,7 +157,16 @@ public class Main {
         }
         System.out.println("\n--- Список всех зарегистрированных приборов ---");
         for (Thermostat device : devices) {
-            String typeName = (device instanceof AirConditioner) ? "Кондиционер" : "Печь";
+            String typeName;
+            if (device instanceof AirConditioner) {
+                typeName = "Кондиционер";
+            } else if (device instanceof Oven) {
+                typeName = "Печь";
+            } else if (device instanceof WirelessRadiatorThermostat) {
+                typeName = "Беспроводной термостат батареи";
+            } else {
+                typeName = "Неизвестный прибор";
+            }
             System.out.println("ID: " + device.getId() +
                     " | Тип: " + typeName +
                     " | Локация: " + device.getLocation() +
@@ -249,6 +318,23 @@ public class Main {
             System.out.println("Ошибка! Разрешено вводить только 'C' или 'F'.");
         }
     }
+
+    private static void loadDevicesFromFileMenu(Scanner scanner, List<Thermostat> devices, String fileName) {
+    System.out.println("\n      Загрузка приборов из файла: " + fileName + "       ");
+    
+    
+    FileDeviceReader reader = new FileDeviceReader(fileName);
+
+
+    List<Thermostat> loaded = reader.readDevicesFromFile();
+
+    if (!loaded.isEmpty()) {
+        devices.addAll(loaded);
+        System.out.println("Успешно добавлено в общую систему устройств: " + loaded.size() + " шт.");
+    } else {
+        System.out.println("Файл пуст или не содержит корректных данных.");
+    }
+}
 }
 
     

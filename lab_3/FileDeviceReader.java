@@ -87,13 +87,16 @@ public class FileDeviceReader {
                 }
             }
 
-            System.out.println("Успешно загружено приборов: " + totalObjectsFound + ", прочитано свойств: " + totalPropertiesRead);
+            System.out.println("Успешно загружено приборов: " + totalObjectsFound + 
+                               ", прочитано свойств: " + totalPropertiesRead + 
+                               ", пропущено/ошибок свойств: " + totalPropertiesMissing);
 
         } catch (IOException e){
             System.out.println("Ошибка при чтении файла: " + e.getMessage());
         }
 
         return loadedDevices; 
+
     }
 
     private Thermostat createDeviceFromProperties(String type, Map<String, String> properties) {
@@ -101,6 +104,12 @@ public class FileDeviceReader {
     String unit = properties.get("unit");
     
     // Проверяем наличие обязательных полей
+    if (location == null || unit == null) {
+        System.out.println("Ошибка: у прибора типа [" + type + "] отсутствуют обязательные поля (location или unit).");
+        return null;
+    }
+
+    // Внутри createDeviceFromProperties:
     if (location == null || unit == null) {
         System.out.println("Ошибка: у прибора типа [" + type + "] отсутствуют обязательные поля (location или unit).");
         return null;

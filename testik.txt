@@ -1,0 +1,42 @@
+
+Ля ля ля 
+Ля ля ля 
+Пу-пу-пу
+Пу-пу-пу
+
+
+[AirConditioner]
+location = Гостиная
+unit = C
+targetTemperature = 22.0
+maxLimitTemperature = 35.0
+
+# Комментарий посреди файла
+05060811sophisticated!_ev# Всякий бредик
+
+[Oven]
+# Здесь проверяем отсутствие необязательных параметров 
+location = Кухня
+unit = C
+
+[WirelessRadiatorThermostat]
+location = Спальня
+unit = C
+targetTemperature = 21.0
+maxLimitTemperature = 30.0
+
+[MasterMargarita]
+# Неизвестный тип прибора — программа должна выдать предупреждение
+location = Подвал
+unit = C
+targetTemperature = 4.0
+
+[AirConditioner]
+# Обязательное поле location НАМЕРЕННО УДАЛЕНО для проверки ошибки
+unit = C
+targetTemperature = 25.0
+
+[Oven]
+location = Столовая
+# Обязательное поле unit НАМЕРЕННО УДАЛЕНО для проверки ошибки
+targetTemperature = 190.0
