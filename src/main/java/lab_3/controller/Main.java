@@ -5,6 +5,7 @@ import lab_3.model.FileDeviceReader;
 import lab_3.model.Oven;
 import lab_3.model.Thermostat;
 import lab_3.model.WirelessRadiatorThermostat;
+import lab_3.view.ConsoleView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,6 +18,52 @@ public class Main {
     private static String currentFileName = "devices.txt"; // имя файла по умолчанию
 
     public static void main(String[] args) {
+        // 1. Если аргументы переданы через терминал — отрабатываем их и завершаем работу
+        if (args.length > 0) {
+            handleCommandLineArguments(args);
+            return;
+        }
+
+        // 2. Если аргументов нет — запускаем полноценное интерактивное меню
+        runInteractiveMode();
+    }
+
+    private static void handleCommandLineArguments(String[] args) {
+        String command = args[0];
+
+        switch (command) {
+            case "--help":
+            case "-h":
+                ConsoleView.printHelp();
+                break;
+
+            case "--read":
+            case "-r":
+                if (args.length > 1) {
+                    currentFileName = args[1];
+                }
+                FileDeviceReader reader = new FileDeviceReader(currentFileName);
+                List<Thermostat> devices = reader.readDevicesFromFile();
+                ConsoleView.printDevices(devices);
+                break;
+
+            case "--cycle":
+            case "-c":
+                System.out.println("Режим цикличного опроса находится в разработке...");
+                break;
+
+            case "--csv":
+                System.out.println("Режим CSV-логирования находится в разработке...");
+                break;
+
+            default:
+                System.out.println("Неизвестный ключ: " + command);
+                ConsoleView.printHelp();
+                break;
+        }
+    }
+
+    private static void runInteractiveMode() {
         Scanner scanner = new Scanner(System.in);
         List<Thermostat> devices = new ArrayList<>();
 
@@ -34,79 +81,41 @@ public class Main {
             System.out.println("0. Выйти из программы");
             System.out.println("Выберите действие: ");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int choice = readValidInt(scanner, "", 0, 7);
 
             switch (choice) {
                 case 1:
-                    addAirConditioner(scanner, devices);
+                    ConsoleView.printDevices(devices); // Используем наш View для красивого вывода!
                     break;
                 case 2:
-                    addOven(scanner, devices);
+                    addAirConditioner(scanner, devices);
                     break;
                 case 3:
-                    addWirelessThermostat(scanner, devices);
+                    addOven(scanner, devices);
                     break;
                 case 4:
-                    showAllDevices(devices);
+                    addWirelessThermostat(scanner, devices);
                     break;
                 case 5:
                     manageDevice(scanner, devices);
                     break;
                 case 6:
-                    // Пункт 6: Загрузка из файла
-                    System.out.println("\n--- Загрузка приборов из файла ---");
-                    System.out.print("Введите имя файла [текущий: " + currentFileName + "]: ");
-                    String inputFileName = scanner.nextLine().trim();
-                    
-                    // Если пользователь ничего не ввел (просто нажал Enter), оставляем currentFileName
-                    if (!inputFileName.isEmpty()) {
-                        currentFileName = inputFileName;
-                    }
-
-                    // Читаем через наш ридер
-                    FileDeviceReader reader = new FileDeviceReader(currentFileName);
-                    List<Thermostat> loaded = reader.readDevicesFromFile();
-
-                    if (!loaded.isEmpty()) {
-                        devices.addAll(loaded);
-                        System.out.println("Успешно добавлено в общую систему устройств: " + loaded.size() + " шт.");
-                    } else {
-                        System.out.println("Файл пуст или не содержит корректных данных.");
-                    }
+                    loadDevicesFromFileMenu(scanner, devices, currentFileName);
                     break;
-
                 case 7:
-                    System.out.println("\n--- Переименование файла на диске ---");
-                    System.out.print("Введите текущее имя файла (например, devices.txt): ");
-                    String oldName = scanner.nextLine().trim();
-    
-                    System.out.print("Введите новое имя файла (например, nnn.txt): ");
+                    System.out.print("Введите новое имя файла (например, new_devices.txt): ");
                     String targetName = scanner.nextLine().trim();
-
-                    // Создаем объект File для старого и нового файла
-                    File oldFile = new File(oldName);
+                    File oldFile = new File(currentFileName);
                     File newFile = new File(targetName);
+                    boolean success = oldFile.renameTo(newFile);
 
-                    // Проверяем, существует ли исходный файл
-                    if (!oldFile.exists()) {
-                    System.out.println("Ошибка: Файл \"" + oldName + "\" не найден на диске!");
-                    break;
+                    if (success) {
+                        System.out.println("Успешно! Файл переименован в \"" + targetName + "\".");
+                        currentFileName = targetName;
+                    } else {
+                        System.out.println("Ошибка при переименовании файла.");
                     }
-
-    // Пробуем переименовать файл физически в папке
-    boolean success = oldFile.renameTo(newFile);
-
-    if (success) {
-        System.out.println("Успешно! Файл \"" + oldName + "\" переименован в \"" + targetName + "\" прямо в папке.");
-        // Если это был текущий файл для чтения, обновляем переменную
-        if (oldName.equals(currentFileName)) {
-            currentFileName = targetName;
-        }
-    } else {
-        System.out.println("Ошибка при переименовании файла.");
-    }
-    break;
+                    break;
                 case 0:
                     running = false;
                     System.out.println("Завершение работы программы.");
@@ -156,31 +165,6 @@ public class Main {
     System.out.println("Термостат батареи успешно добавлен! ID прибора: " + wrt.getId());
 }
 
-    private static void showAllDevices(List<Thermostat> devices) {
-        if (devices.isEmpty()) {
-            System.out.println("Список приборов пуст.");
-            return;
-        }
-        System.out.println("\n--- Список всех зарегистрированных приборов ---");
-        for (Thermostat device : devices) {
-            String typeName;
-            if (device instanceof AirConditioner) {
-                typeName = "Кондиционер";
-            } else if (device instanceof Oven) {
-                typeName = "Печь";
-            } else if (device instanceof WirelessRadiatorThermostat) {
-                typeName = "Беспроводной термостат батареи";
-            } else {
-                typeName = "Неизвестный прибор";
-            }
-            System.out.println("ID: " + device.getId() +
-                    " | Тип: " + typeName +
-                    " | Локация: " + device.getLocation() +
-                    " | Целевая темп.: " + device.getTargetTemperature() + device.getUnit() +
-                    " | Текущая темп.: " + device.getCurrentTemperature() + device.getUnit());
-        }
-    }
-
     private static void manageDevice(Scanner scanner, List<Thermostat> devices) {
         if (devices.isEmpty()) {
             System.out.println("Список приборов пуст. Нечем управлять.");
@@ -205,7 +189,8 @@ public class Main {
         System.out.println("\nУправление прибором ID " + selectedDevice.getId() + " (" + selectedDevice.getClass().getSimpleName() + "):");
         System.out.println("1. Изменить целевую температуру");
 
-        if (selectedDevice instanceof AirConditioner ac) {
+        if (selectedDevice instanceof AirConditioner) {
+            AirConditioner ac = (AirConditioner) selectedDevice;
             System.out.println("2. Переключить Эко-режим");
             System.out.println("3. Изменить скорость вентилятора (1-5)");
 
@@ -223,7 +208,8 @@ public class Main {
                     ac.setFanSpeed(speed);
                     break;
             }
-        } else if (selectedDevice instanceof Oven oven) {
+        } else if (selectedDevice instanceof Oven) {
+            Oven oven = (Oven) selectedDevice;
             System.out.println("2. Установить таймер (минуты)");
 
             int subChoice = readValidInt(scanner, "Выберите действие: ", 1, 2);
@@ -237,7 +223,8 @@ public class Main {
                     oven.setTimer(mins);
                     break;
             }
-        } else if (selectedDevice instanceof WirelessRadiatorThermostat wrt) {
+        } else if (selectedDevice instanceof WirelessRadiatorThermostat) {
+            WirelessRadiatorThermostat wrt = (WirelessRadiatorThermostat) selectedDevice;
             System.out.println("2. Проверить заряд батареи");
             System.out.println("3. Изменить статус датчика окна (Открыто/Закрыто)");
             System.out.println("4. Симулировать разряд батареи");
