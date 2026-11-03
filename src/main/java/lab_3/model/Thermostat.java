@@ -63,6 +63,7 @@ public abstract class Thermostat {
     public double getCurrentTemperature() { return currentTemperature; }
     public double getTargetTemperature() { return targetTemperature; }
     public String getUnit() { return unit; }
+    public double getMaxLimitTemperature() { return maxLimitTemperature; } 
 
     @Override
     public String toString() {

@@ -85,7 +85,66 @@ public class Main {
                 break;
 
             case "--csv":
-                System.out.println("Режим CSV-логирования находится в разработке...");
+                int csvIntervalSeconds = 3;
+                String csvFileName = "devices_log.csv";
+                
+                // Если передали период (например, 2)
+                if (args.length > 1) {
+                    try {
+                        csvIntervalSeconds = Integer.parseInt(args[1]);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Ошибка: период должен быть числом. Используется по умолчанию: 3 сек.");
+                    }
+                }
+                
+                // Если передали имя файла-источника (вторым аргументом, если это не число, или третьим)
+                if (args.length > 2) {
+                    currentFileName = args[2];
+                }
+                
+                // Если передали имя файла для логов
+                if (args.length > 3) {
+                    csvFileName = args[3];
+                }
+
+                System.out.println("Запуск режима CSV-логирования (Интервал: " + csvIntervalSeconds + " сек., Чтение из: " + currentFileName + ", Лог в: " + csvFileName + "). Для выхода нажмите Ctrl+C");
+                long csvIntervalMillis = csvIntervalSeconds * 1000L;
+
+                try {
+                    try (java.io.PrintWriter writer = new java.io.PrintWriter(new java.io.FileWriter(csvFileName, true))) {
+                        java.io.File csvFile = new java.io.File(csvFileName);
+                        if (csvFile.length() == 0) {
+                            writer.println("Timestamp,ID,Type,Location,TargetTemperature,MaxLimitTemperature");
+                        }
+
+                        while (true) {
+                            FileDeviceReader csvReader = new FileDeviceReader(currentFileName);
+                            List<Thermostat> devicesToLog = csvReader.readDevicesFromFile();
+                            
+                            String timestamp = java.time.LocalDateTime.now().toString();
+                            
+                            for (Thermostat d : devicesToLog) {
+                                String line = String.format(java.util.Locale.US, "%s,%d,%s,%s,%.1f,%.1f",
+                                    timestamp,
+                                    d.getId(),
+                                    d.getClass().getSimpleName(),
+                                    d.getLocation(),
+                                    d.getTargetTemperature(),
+                                    d.getMaxLimitTemperature()
+                                );
+                                writer.println(line);
+                            }
+                            writer.flush();
+                            System.out.println("[" + timestamp + "] Записано в лог приборов: " + devicesToLog.size());
+
+                            Thread.sleep(csvIntervalMillis);
+                        }
+                    }
+                } catch (InterruptedException e) {
+                    System.out.println("CSV-логирование было прервано.");
+                } catch (java.io.IOException e) {
+                    System.out.println("Ошибка при работе с CSV-файлом: " + e.getMessage());
+                }
                 break;
 
             default:
