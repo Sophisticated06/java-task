@@ -1,5 +1,10 @@
 package lab_3.controller;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 import lab_3.model.AirConditioner;
 import lab_3.model.FileDeviceReader;
 import lab_3.model.Oven;
@@ -7,24 +12,19 @@ import lab_3.model.Thermostat;
 import lab_3.model.WirelessRadiatorThermostat;
 import lab_3.view.ConsoleView;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
 
 public class Main {
 
-    private static String currentFileName = "devices.txt"; // имя файла по умолчанию
+    private static String currentFileName = "devices.txt";
 
     public static void main(String[] args) {
-        // 1. Если аргументы переданы через терминал — отрабатываем их и завершаем работу
+        // Если аргументы переданы через терминал — отрабатываем их и завершаем работу
         if (args.length > 0) {
             handleCommandLineArguments(args);
             return;
         }
 
-        // 2. Если аргументов нет — запускаем полноценное интерактивное меню
+        // Если аргументов нет — запускаем полноценное интерактивное меню
         runInteractiveMode();
     }
 
@@ -49,7 +49,39 @@ public class Main {
 
             case "--cycle":
             case "-c":
-                System.out.println("Режим цикличного опроса находится в разработке...");
+                int intervalSeconds = 3;
+                
+                if (args.length > 1) {
+                    try {
+
+                        intervalSeconds = Integer.parseInt(args[1]);
+                    } catch (NumberFormatException e) {
+                       
+                        currentFileName = args[1];
+                    }
+                }
+                
+                
+                if (args.length > 2) {
+                    currentFileName = args[2];
+                }
+
+                System.out.println("Запуск циклического опроса с периодом " + intervalSeconds + " сек. (Файл: " + currentFileName + ", Для выхода нажмите Ctrl+C)");
+                long intervalMillis = intervalSeconds * 1000L;
+
+                try {
+                    while (true) {
+                        System.out.println("\n--- Опрос состояния устройств ---");
+                        FileDeviceReader cycleReader = new FileDeviceReader(currentFileName);
+                        List<Thermostat> currentDevices = cycleReader.readDevicesFromFile();
+                        ConsoleView.printDevices(currentDevices);
+                        
+                        Thread.sleep(intervalMillis);
+                    }
+                } 
+                catch (InterruptedException e) {
+                    System.out.println("Циклический опрос был прерван.");
+                }
                 break;
 
             case "--csv":
@@ -85,7 +117,7 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    ConsoleView.printDevices(devices); // Используем наш View для красивого вывода!
+                    ConsoleView.printDevices(devices);
                     break;
                 case 2:
                     addAirConditioner(scanner, devices);
