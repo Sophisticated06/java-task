@@ -9,7 +9,7 @@
 location = Гостиная
 unit = C
 targetTemperature = 22.0
-maxLimitTemperature = 35.0
+maxLimitTemperature = 34.0
 
 # Комментарий посреди файла
 05060811sophisticated!_ev# Всякий бредик

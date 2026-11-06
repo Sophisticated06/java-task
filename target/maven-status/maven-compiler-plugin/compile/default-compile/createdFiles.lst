@@ -1,0 +1,8 @@
+lab_3/controller/MainController.class
+lab_3/model/Oven.class
+lab_3/model/WirelessRadiatorThermostat.class
+lab_3/model/ThermostatManager.class
+lab_3/view/ConsoleView.class
+lab_3/Main.class
+lab_3/model/Thermostat.class
+lab_3/model/AirConditioner.class

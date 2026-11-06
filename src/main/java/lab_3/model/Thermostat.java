@@ -1,74 +1,85 @@
 package lab_3.model;
-import java.util.Random;
+
+import java.text.DecimalFormat;
 
 public abstract class Thermostat {
-    private static int idCounter = 1;
-    private final int id;
+    private int id;
     private String location;
     private String unit;
-    protected double currentTemperature;
+    private double currentTemperature;
     protected double targetTemperature;
     protected double maxLimitTemperature;
 
-    public Thermostat(String location, String unit, double targetTemperature, double maxLimitTemperature){
-        this.id = idCounter++;
-        this.unit = unit;
+    public Thermostat(int id, String location, String unit, double targetTemperature, double maxLimitTemperature) {
+        this.id = id;
         this.location = location;
-        this.targetTemperature = targetTemperature;
-        this.maxLimitTemperature = maxLimitTemperature;
-        this.currentTemperature = 20.0;
-
-        setTemperature(targetTemperature);
-
-        if (maxLimitTemperature < this.targetTemperature) {
-            System.out.println("Предельная температура не может быть меньше целевой! Установлен предел: " + (this.targetTemperature + 20.0) + " " + unit);
-            this.maxLimitTemperature = this.targetTemperature + 20.0;
+        this.unit = unit;
+         
+        if (maxLimitTemperature < targetTemperature) {
+            this.maxLimitTemperature = targetTemperature + 20.0;
         } else {
             this.maxLimitTemperature = maxLimitTemperature;
         }
+        
+        setTemperature(targetTemperature);
     }
 
-    public void setTemperature(double temperature){
+    public boolean setTemperature(double temperature) {
         if (!isValidTemperature(temperature)) {
-            System.out.println("Недопустимая температура (" + temperature + " " + unit + ")! Установлено значение по умолчанию: 20.0 " + unit);
             this.targetTemperature = 20.0;
-        } else {
-            this.targetTemperature = temperature;
-            System.out.println("Целевая температура установлена: " + this.targetTemperature + " " + unit);
+            this.currentTemperature = 20.0;
+            return false;
         }
+        this.targetTemperature = temperature;
+        this.currentTemperature = temperature;
+        return true;
+    }
+
+    public void simulateFluctuation() {
+        double delta = (Math.random() - 0.5) * 2.0;
+        this.currentTemperature = Math.round((this.targetTemperature + delta) * 10.0) / 10.0;
+    }
+
+    public void resetSettings() {
+        this.targetTemperature = 20.0;
+        this.currentTemperature = 20.0;
     }
 
     protected boolean isValidTemperature(double temp) {
         return temp >= -50.0 && temp <= 300.0;
     }
 
-    public boolean isExceedingLimit(){
+    public boolean isExceedingLimit() {
         return currentTemperature > maxLimitTemperature;
     }
 
-    public void simulateFluctuation(){
-        double delta = (new Random().nextDouble() * 4) - 2;
-        this.currentTemperature += delta;
-        System.out.printf("Температура изменилась. Текущая: %.1f %s%n", currentTemperature, unit);
-    }
-
-    public void resetSettings(){
-        this.targetTemperature = 20.0;
-        System.out.println("Настройки сброшены к базовым (20.0 " + unit + " ).");
-    }
-
-    public int getId(){ return id;}
-    public String getLocation(){return location;}
-    public void setLocation(String location){this.location = location;}
+    // Геттеры
+    public int getId() { return id; }
+    public String getLocation() { return location; }
+    public String getUnit() { return unit; }
     public double getCurrentTemperature() { return currentTemperature; }
     public double getTargetTemperature() { return targetTemperature; }
-    public String getUnit() { return unit; }
-    public double getMaxLimitTemperature() { return maxLimitTemperature; } 
+    public double getMaxLimitTemperature() { return maxLimitTemperature; }
 
     @Override
     public String toString() {
-        return String.format("ID: %d | %s | Место: %s | Ед: %s | Текущая: %.1f | Цель: %.1f | Предел: %.1f",
-                id, getClass().getSimpleName(), location, unit, currentTemperature, targetTemperature, maxLimitTemperature);
-    }
+    DecimalFormat df = new DecimalFormat("#.0");
+    StringBuilder sb = new StringBuilder();
+    sb.append("[")
+      .append(getClass().getSimpleName())
+      .append(" ID:")
+      .append(id)
+      .append("] Локация: ")
+      .append(location)
+      .append(" | Текущая: ")
+      .append(df.format(getCurrentTemperature()))
+      .append(unit)
+      .append(" | Целевая: ")
+      .append(df.format(getTargetTemperature()))
+      .append(unit)
+      .append(" | Предел: ")
+      .append(df.format(getMaxLimitTemperature()))
+      .append(unit);
+    return sb.toString();
 }
-
+}
