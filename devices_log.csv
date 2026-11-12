@@ -25,3 +25,12 @@ Timestamp,ID,Type,Location,TargetTemperature,MaxLimitTemperature
 2026-11-05T20:00:26.032231,2,WirelessRadiatorThermostat,Спальня,21.0,30.0
 2026-11-05T20:00:28.040268,1,Oven,Кухня,20.0,300.0
 2026-11-05T20:00:28.040268,2,WirelessRadiatorThermostat,Спальня,21.0,30.0
+2026-11-12T19:57:05.010889,1,AirConditioner,Гостиная,22.0,40.0
+2026-11-12T19:57:05.010889,2,Oven,Кухня,20.0,300.0
+2026-11-12T19:57:05.010889,3,WirelessRadiatorThermostat,Спальня,21.0,30.0
+2026-11-12T19:57:10.018462,1,AirConditioner,Гостиная,22.0,40.0
+2026-11-12T19:57:10.018462,2,Oven,Кухня,20.0,300.0
+2026-11-12T19:57:10.018462,3,WirelessRadiatorThermostat,Спальня,21.0,30.0
+2026-11-12T19:57:15.026026,1,AirConditioner,Гостиная,22.0,40.0
+2026-11-12T19:57:15.026026,2,Oven,Кухня,20.0,300.0
+2026-11-12T19:57:15.026026,3,WirelessRadiatorThermostat,Спальня,21.0,30.0

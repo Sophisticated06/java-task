@@ -1,4 +1,4 @@
-package lab_3.model;
+package lab_3.controller;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import lab_3.model.AirConditioner;
+import lab_3.model.Oven;
+import lab_3.model.Thermostat;
+import lab_3.model.WirelessRadiatorThermostat;
 import lab_3.view.ConsoleView;
 
 public class ThermostatManager {

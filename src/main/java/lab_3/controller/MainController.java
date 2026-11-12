@@ -8,7 +8,6 @@ import java.util.Scanner;
 import lab_3.model.AirConditioner;
 import lab_3.model.Oven;
 import lab_3.model.Thermostat;
-import lab_3.model.ThermostatManager;
 import lab_3.model.WirelessRadiatorThermostat;
 import lab_3.view.ConsoleView;
 

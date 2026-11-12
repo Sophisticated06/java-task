@@ -1,7 +1,7 @@
 package lab_3;
 
 import lab_3.controller.MainController;
-import lab_3.model.ThermostatManager;
+import lab_3.controller.ThermostatManager;
 import lab_3.view.ConsoleView;
 
 public class Main {
