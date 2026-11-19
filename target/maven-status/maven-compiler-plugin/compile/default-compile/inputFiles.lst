@@ -1,8 +1,10 @@
 /Users/sophist/University/3/front/src/main/java/lab_3/Main.java
-/Users/sophist/University/3/front/src/main/java/lab_3/controller/MainController.java
-/Users/sophist/University/3/front/src/main/java/lab_3/model/AirConditioner.java
-/Users/sophist/University/3/front/src/main/java/lab_3/model/Oven.java
+/Users/sophist/University/3/front/src/main/java/lab_3/client/ClientMain.java
 /Users/sophist/University/3/front/src/main/java/lab_3/model/Thermostat.java
-/Users/sophist/University/3/front/src/main/java/lab_3/model/ThermostatManager.java
-/Users/sophist/University/3/front/src/main/java/lab_3/model/WirelessRadiatorThermostat.java
+/Users/sophist/University/3/front/src/main/java/lab_3/model/AirConditioner.java
+/Users/sophist/University/3/front/src/main/java/lab_3/controller/MainController.java
+/Users/sophist/University/3/front/src/main/java/lab_3/server/ServerMain.java
 /Users/sophist/University/3/front/src/main/java/lab_3/view/ConsoleView.java
+/Users/sophist/University/3/front/src/main/java/lab_3/controller/ThermostatManager.java
+/Users/sophist/University/3/front/src/main/java/lab_3/model/WirelessRadiatorThermostat.java
+/Users/sophist/University/3/front/src/main/java/lab_3/model/Oven.java

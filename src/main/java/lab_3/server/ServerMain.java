@@ -14,7 +14,7 @@ import lab_3.view.ConsoleView;
 
 public class ServerMain {
     // Порт, на котором сервер будет слушать входящие подключения
-    private static final int PORT = 8080;
+    private static final int PORT = 5555;
     
     // Ограничение MTU
     private static final int MAX_MTU_BUFFER = 1460;
